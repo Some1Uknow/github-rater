@@ -162,8 +162,8 @@ export interface RoastPraise {
 
 export interface Comparisons {
   similarTo: string[];
-  betterThan: string;
-  couldLearnFrom: string;
+  betterThan: string[];
+  couldLearnFrom: string[];
   peerGroup: string;
 }
 

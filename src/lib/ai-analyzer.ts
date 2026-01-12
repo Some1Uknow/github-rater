@@ -65,8 +65,8 @@ const analysisSchema = z.object({
   }),
   comparisons: z.object({
     similarTo: z.array(z.string()),
-    betterThan: z.string(),
-    couldLearnFrom: z.string(),
+    betterThan: z.array(z.string()),
+    couldLearnFrom: z.array(z.string()),
     peerGroup: z.string(),
   }),
   predictions: z.object({
@@ -462,8 +462,8 @@ function generateFallbackAnalysis(githubData: GitHubData): AnalysisResult {
     },
     comparisons: {
       similarTo: ["Other developers at this level"],
-      betterThan: `${Math.round(Math.min(powerLevel / 100, 95))}% of GitHub users`,
-      couldLearnFrom: "Senior open source maintainers",
+      betterThan: [`${Math.round(Math.min(powerLevel / 100, 95))}% of GitHub users`],
+      couldLearnFrom: ["Senior open source maintainers"],
       peerGroup: rank + "-tier developers",
     },
     predictions: {

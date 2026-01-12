@@ -10,6 +10,17 @@ interface VerdictPanelProps {
   funFacts: string[];
 }
 
+// Helper to safely format comparison values that might be string or array (for backwards compatibility with cached data)
+function formatComparison(value: string | string[] | undefined, maxItems?: number): string {
+  if (!value) return "N/A";
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    const items = maxItems ? value.slice(0, maxItems) : value;
+    return items.join(", ");
+  }
+  return String(value);
+}
+
 export function VerdictPanel({ verdict, comparisons, predictions, funFacts }: VerdictPanelProps) {
   return (
     <div className="w-full space-y-8">
@@ -101,16 +112,16 @@ export function VerdictPanel({ verdict, comparisons, predictions, funFacts }: Ve
           <div>
             <div className="font-vt323 text-gray-500 text-sm mb-1">SIMILAR TO</div>
             <div className="font-vt323 text-pink-300 text-sm">
-              {comparisons.similarTo.slice(0, 2).join(", ")}
+              {formatComparison(comparisons.similarTo, 2)}
             </div>
           </div>
           <div>
             <div className="font-vt323 text-gray-500 text-sm mb-1">BETTER THAN</div>
-            <div className="font-vt323 text-pink-300 text-sm">{comparisons.betterThan}</div>
+            <div className="font-vt323 text-pink-300 text-sm">{formatComparison(comparisons.betterThan)}</div>
           </div>
           <div>
             <div className="font-vt323 text-gray-500 text-sm mb-1">COULD LEARN FROM</div>
-            <div className="font-vt323 text-pink-300 text-sm">{comparisons.couldLearnFrom}</div>
+            <div className="font-vt323 text-pink-300 text-sm">{formatComparison(comparisons.couldLearnFrom)}</div>
           </div>
           <div>
             <div className="font-vt323 text-gray-500 text-sm mb-1">PEER GROUP</div>

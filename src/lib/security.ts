@@ -70,7 +70,7 @@ export function sanitizeInput(input: string): string {
  */
 export function validateOrigin(origin: string | null, allowedOrigins: string[]): boolean {
   if (!origin) return false;
-  
+
   try {
     const url = new URL(origin);
     return allowedOrigins.some(allowed => {
@@ -102,7 +102,7 @@ export const RATE_LIMITS = {
   // Strict limit for analysis endpoints (expensive operations)
   ANALYSIS: {
     windowMs: 60 * 1000, // 1 minute
-    maxRequests: 5, // 5 requests per minute
+    maxRequests: 20, // Increased to 20 for better dev experience
   },
   // Moderate limit for GitHub data fetching
   GITHUB_FETCH: {
@@ -144,9 +144,9 @@ export function getSafeErrorMessage(error: unknown): string {
  */
 export function validateRequestSize(contentLength: string | null, maxSizeBytes: number = 1024 * 100): boolean {
   if (!contentLength) return true; // No content-length header
-  
+
   const size = parseInt(contentLength, 10);
   if (isNaN(size)) return true;
-  
+
   return size <= maxSizeBytes;
 }

@@ -82,33 +82,33 @@ const MOTTOS = [
 
 function calculatePowerLevel(data: GitHubData): number {
   const { user, repos } = data;
-  
+
   // Calculate totals from repos if not provided
   const totalStars = data.totalStars ?? repos.reduce((sum, r) => sum + r.stargazers_count, 0);
   const totalForks = data.totalForks ?? repos.reduce((sum, r) => sum + r.forks_count, 0);
-  
+
   let power = 0;
-  
+
   // Base power from account age (max 1000)
   const accountAge = (Date.now() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24 * 365);
   power += Math.min(accountAge * 100, 1000);
-  
+
   // Power from repos (max 2000)
   power += Math.min(repos.length * 50, 2000);
-  
+
   // Power from stars (max 3000)
   power += Math.min(totalStars * 10, 3000);
-  
+
   // Power from forks (max 1500)
   power += Math.min(totalForks * 15, 1500);
-  
+
   // Power from followers (max 2000)
   power += Math.min(user.followers * 5, 2000);
-  
+
   // Power from language diversity (max 500)
   const languageCount = Object.keys(data.languages).length;
   power += Math.min(languageCount * 50, 500);
-  
+
   return Math.round(power);
 }
 
@@ -128,70 +128,70 @@ function generateBadges(data: GitHubData): Badge[] {
   const badges: Badge[] = [];
   const { user, repos, languages } = data;
   const totalStars = data.totalStars ?? repos.reduce((sum, r) => sum + r.stargazers_count, 0);
-  
+
   // Account age badges
   const accountAge = (Date.now() - new Date(user.created_at).getTime()) / (1000 * 60 * 60 * 24 * 365);
   if (accountAge >= 10) badges.push({ id: "og-developer", name: "OG Developer", rarity: "Legendary", icon: "🎖️", description: "10+ years on GitHub" });
   else if (accountAge >= 5) badges.push({ id: "veteran", name: "Veteran Coder", rarity: "Epic", icon: "⭐", description: "5+ years on GitHub" });
   else if (accountAge >= 2) badges.push({ id: "established", name: "Established Dev", rarity: "Rare", icon: "🏅", description: "2+ years on GitHub" });
-  
+
   // Star badges
   if (totalStars >= 10000) badges.push({ id: "star-lord", name: "Star Lord", rarity: "Mythic", icon: "👑", description: "10K+ total stars" });
   else if (totalStars >= 1000) badges.push({ id: "rising-star", name: "Rising Star", rarity: "Legendary", icon: "🌟", description: "1K+ total stars" });
   else if (totalStars >= 100) badges.push({ id: "stargazer", name: "Stargazer", rarity: "Epic", icon: "✨", description: "100+ total stars" });
-  
+
   // Follower badges
   if (user.followers >= 10000) badges.push({ id: "influencer", name: "Tech Influencer", rarity: "Mythic", icon: "📢", description: "10K+ followers" });
   else if (user.followers >= 1000) badges.push({ id: "thought-leader", name: "Thought Leader", rarity: "Legendary", icon: "🎤", description: "1K+ followers" });
   else if (user.followers >= 100) badges.push({ id: "community-voice", name: "Community Voice", rarity: "Epic", icon: "🗣️", description: "100+ followers" });
-  
+
   // Repo badges
   if (repos.length >= 100) badges.push({ id: "repo-hoarder", name: "Repo Hoarder", rarity: "Epic", icon: "📦", description: "100+ repositories" });
   else if (repos.length >= 50) badges.push({ id: "prolific", name: "Prolific Creator", rarity: "Rare", icon: "🏭", description: "50+ repositories" });
-  
+
   // Language badges
   const langCount = Object.keys(languages).length;
   if (langCount >= 10) badges.push({ id: "polyglot", name: "Polyglot Master", rarity: "Legendary", icon: "🌐", description: "10+ languages used" });
   else if (langCount >= 5) badges.push({ id: "multilingual", name: "Multilingual Dev", rarity: "Rare", icon: "🗺️", description: "5+ languages used" });
-  
+
   // Special language badges
   if (languages["Rust"]) badges.push({ id: "rustacean", name: "Rustacean", rarity: "Rare", icon: "🦀", description: "Writes Rust code" });
   if (languages["Go"]) badges.push({ id: "gopher", name: "Gopher", rarity: "Rare", icon: "🐹", description: "Writes Go code" });
   if (languages["TypeScript"]) badges.push({ id: "type-safe", name: "Type Safe", rarity: "Uncommon", icon: "🛡️", description: "Uses TypeScript" });
   if (languages["Python"]) badges.push({ id: "pythonista", name: "Pythonista", rarity: "Common", icon: "🐍", description: "Writes Python code" });
   if (languages["JavaScript"]) badges.push({ id: "js-warrior", name: "JS Warrior", rarity: "Common", icon: "⚡", description: "Writes JavaScript" });
-  
+
   // Bio badge
   if (user.bio && user.bio.length > 50) badges.push({ id: "storyteller", name: "Storyteller", rarity: "Uncommon", icon: "📝", description: "Has a detailed bio" });
-  
+
   // Following ratio
   if (user.followers > 0 && user.following === 0) badges.push({ id: "lone-wolf", name: "Lone Wolf", rarity: "Rare", icon: "🐺", description: "Follows no one" });
   if (user.followers > user.following * 10) badges.push({ id: "celebrity", name: "GitHub Celebrity", rarity: "Epic", icon: "🌟", description: "10x follower ratio" });
-  
+
   return badges.slice(0, 8); // Max 8 badges
 }
 
 function generateLanguageSkills(languages: Record<string, number>, repos: GitHubData["repos"]): Record<string, LanguageSkill> {
   const skills: Record<string, LanguageSkill> = {};
   const totalBytes = Object.values(languages).reduce((a, b) => a + b, 0);
-  
+
   for (const [lang, bytes] of Object.entries(languages)) {
     const percentage = (bytes / totalBytes) * 100;
     const projectCount = repos.filter(r => r.language === lang).length;
-    
+
     let level = Math.min(Math.round(percentage * 2 + projectCount * 5), 100);
     let mastery = "Novice";
     let linesEstimate = "1K+";
-    
+
     if (level >= 90) { mastery = "Godlike"; linesEstimate = "100K+"; }
     else if (level >= 75) { mastery = "Master"; linesEstimate = "50K+"; }
     else if (level >= 60) { mastery = "Expert"; linesEstimate = "25K+"; }
     else if (level >= 40) { mastery = "Proficient"; linesEstimate = "10K+"; }
     else if (level >= 20) { mastery = "Intermediate"; linesEstimate = "5K+"; }
-    
+
     skills[lang] = { level, projects: projectCount, linesEstimate, mastery };
   }
-  
+
   return skills;
 }
 
@@ -201,22 +201,22 @@ function random<T>(arr: T[]): T {
 
 export function analyzeGitHubData(data: GitHubData): AnalysisResult {
   const { user, repos, languages } = data;
-  
+
   // Calculate totals from repos if not provided
   const totalStars = data.totalStars ?? repos.reduce((sum, r) => sum + r.stargazers_count, 0);
   const totalForks = data.totalForks ?? repos.reduce((sum, r) => sum + r.forks_count, 0);
-  
+
   const power = calculatePowerLevel(data);
   const { rank, title, percentile } = getRank(power);
   const archetype = random(ARCHETYPES);
-  
+
   // Calculate breakdown scores
   const codeQuality = Math.min(Math.round((totalStars / Math.max(repos.length, 1)) * 10 + 50), 100);
   const consistency = Math.min(Math.round(repos.length * 2 + 30), 100);
   const influence = Math.min(Math.round(Math.log10(user.followers + 1) * 25), 100);
   const diversity = Math.min(Object.keys(languages).length * 10, 100);
   const communityImpact = Math.min(Math.round((totalForks / Math.max(repos.length, 1)) * 20 + 30), 100);
-  
+
   // Find most starred repo
   const sortedRepos = [...repos].sort((a, b) => b.stargazers_count - a.stargazers_count);
   const mostStarred = sortedRepos[0] ? {
@@ -224,7 +224,7 @@ export function analyzeGitHubData(data: GitHubData): AnalysisResult {
     stars: sortedRepos[0].stargazers_count,
     description: sortedRepos[0].description || "No description"
   } : null;
-  
+
   // Get top topics
   const topicCounts: Record<string, number> = {};
   repos.forEach(repo => {
@@ -236,19 +236,19 @@ export function analyzeGitHubData(data: GitHubData): AnalysisResult {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
     .map(([topic]) => topic);
-  
+
   // Calculate follower ratio
-  const followerRatio = user.following === 0 
-    ? "∞" 
+  const followerRatio = user.following === 0
+    ? "∞"
     : (user.followers / user.following).toFixed(1);
-  
+
   // Estimate reach
   let estimatedReach = "< 100 developers";
   if (user.followers >= 10000) estimatedReach = "1M+ developers";
   else if (user.followers >= 1000) estimatedReach = "100K+ developers";
   else if (user.followers >= 100) estimatedReach = "10K+ developers";
   else if (user.followers >= 10) estimatedReach = "1K+ developers";
-  
+
   // Generate fun facts
   const funFacts = [
     `Has mass than ${Math.round(repos.length * 1.5)} average developers combined`,
@@ -257,7 +257,7 @@ export function analyzeGitHubData(data: GitHubData): AnalysisResult {
     user.followers > user.following ? "More popular than a JavaScript framework" : "Humble and grounded",
     Object.keys(languages).length > 5 ? "Speaks more languages than a UN translator" : "Focused specialist",
   ];
-  
+
   // Determine hiring verdict
   let shouldYouHire = "Worth interviewing";
   let trustWithProduction = "With supervision";
@@ -265,7 +265,7 @@ export function analyzeGitHubData(data: GitHubData): AnalysisResult {
   else if (power >= 5000) { shouldYouHire = "Strong candidate"; trustWithProduction = "Yes, with code review"; }
   else if (power >= 3000) { shouldYouHire = "Promising talent"; trustWithProduction = "For non-critical systems"; }
   else if (power < 1000) { shouldYouHire = "Needs more experience"; trustWithProduction = "Staging only"; }
-  
+
   return {
     meta: {
       analyzedAt: new Date().toISOString(),
@@ -324,7 +324,7 @@ export function analyzeGitHubData(data: GitHubData): AnalysisResult {
       burnoutRisk: consistency > 80 ? "Low" : consistency > 50 ? "Medium" : "High",
       pattern: {
         type: consistency > 70 ? "Steady Contributor" : "Burst Coder",
-        description: consistency > 70 
+        description: consistency > 70
           ? "Maintains consistent output without extreme spikes"
           : "Codes in intense bursts followed by quiet periods"
       }
@@ -355,12 +355,12 @@ export function analyzeGitHubData(data: GitHubData): AnalysisResult {
     ropiast: {
       roast: random(ROASTS),
       praise: random(PRAISES),
-      constructiveFeedback: repos.length < 10 
+      constructiveFeedback: repos.length < 10
         ? "Consider creating more public projects to showcase your skills"
-        : totalStars < 50 
-        ? "Focus on promoting your best work to gain more visibility"
-        : "Keep doing what you're doing, it's working!",
-      motivationalQuote: power >= 5000 
+        : totalStars < 50
+          ? "Focus on promoting your best work to gain more visibility"
+          : "Keep doing what you're doing, it's working!",
+      motivationalQuote: power >= 5000
         ? "You're already a legend. Now go mentor the next generation."
         : "Every expert was once a beginner. Keep pushing!"
     },
@@ -370,8 +370,8 @@ export function analyzeGitHubData(data: GitHubData): AnalysisResult {
         power >= 5000 ? "Evan You" : "Your future self",
         "That one senior dev everyone respects"
       ],
-      betterThan: `${percentile}% of developers`,
-      couldLearnFrom: power >= 9000 ? "No one on GitHub" : "The top 1%",
+      betterThan: [`${percentile}% of developers`],
+      couldLearnFrom: [power >= 9000 ? "No one on GitHub" : "The top 1%"],
       peerGroup: title
     },
     predictions: {

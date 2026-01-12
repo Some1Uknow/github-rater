@@ -34,34 +34,27 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
   useEffect(() => {
     async function fetchAndAnalyze() {
       try {
-        // Phase 1: Fetch GitHub data
+        // Phase 1: Start fetching (Checking cache & GitHub)
         setPhase("fetching");
-        const githubResponse = await fetch(`/api/github/${username}`);
 
-        if (!githubResponse.ok) {
-          const errorData = await githubResponse.json();
-          throw new Error(errorData.error || "Failed to fetch GitHub data");
+        // Use the unified endpoint that checks cache first
+        const response = await fetch(`/api/rate/${username}`);
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to fetch data");
         }
 
-        const data: GitHubData = await githubResponse.json();
-        setGithubData(data);
+        const data = await response.json();
 
-        // Phase 2: Analyze data
+        // Update state with fetched data
+        setGithubData(data.githubData);
+        setAnalysis(data.analysis);
+
+        // Visual pacing: Even if cached, show a brief "analyzing" phase for effect
+        // If not cached (data.cached === false), the fetch took longer naturally
         setPhase("analyzing");
         await new Promise((resolve) => setTimeout(resolve, 800));
-
-        const analysisResponse = await fetch("/api/analyze", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        });
-
-        if (!analysisResponse.ok) {
-          throw new Error("Failed to analyze data");
-        }
-
-        const analysisData: AnalysisResult = await analysisResponse.json();
-        setAnalysis(analysisData);
 
         // Phase 3: Generate report
         setPhase("generating");
@@ -71,7 +64,7 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
         setPhase("complete");
 
         // Trigger confetti for high power levels
-        if (analysisData.powerLevel.overall >= 5000) {
+        if (data.analysis.powerLevel.overall >= 5000) {
           setTimeout(() => {
             confetti({
               particleCount: 100,
@@ -82,6 +75,7 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
           }, 500);
         }
       } catch (err) {
+        console.error("Error during analysis:", err);
         setError(err instanceof Error ? err.message : "An error occurred");
         setPhase("error");
       }
@@ -307,13 +301,6 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
               </button>
             ))}
           </div>
-
-          <button
-            onClick={handleShare}
-            className="font-vt323 text-base md:text-xl px-4 md:px-5 py-2 md:py-3 bg-pink-500/20 border-2 border-pink-500/50 text-pink-400 rounded hover:bg-pink-500/30 transition-colors font-bold"
-          >
-            📸 SHARE
-          </button>
         </div>
       </nav>
 
@@ -377,10 +364,21 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <ArchetypeCard
-                archetype={analysis.archetype}
-                username={username}
-                avatarUrl={githubData.user.avatar_url}
+              <div id="profile-card">
+                <ArchetypeCard
+                  archetype={analysis.archetype}
+                  username={username}
+                  avatarUrl={githubData.user.avatar_url}
+                />
+              </div>
+
+              {/* Download/Share buttons for profile card */}
+              <SectionActions
+                sectionId="profile-card"
+                sectionName="Profile Card"
+                onDownload={handleSectionDownload}
+                onShareToX={handleShareToX}
+                shareData={`Check out my GitHub profile! 🔥 | @${username} | ${analysis.archetype.primary} - ${analysis.archetype.secondary}`}
               />
 
               {/* Personality traits */}

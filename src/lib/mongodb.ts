@@ -12,6 +12,11 @@ const options: MongoClientOptions = {
   serverSelectionTimeoutMS: 5000, // Fail fast if DB is unreachable
   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
   connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
+  // TLS configuration for Vercel serverless environment
+  tls: true,
+  tlsAllowInvalidCertificates: false,
+  retryWrites: true,
+  retryReads: true,
 };
 
 let client: MongoClient;

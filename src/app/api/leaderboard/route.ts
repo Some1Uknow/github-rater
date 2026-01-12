@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
       const collection = db.collection("analyses");
 
       // Build aggregation pipeline
-      const pipeline: any[] = [
+      const pipeline: Array<Object> = [
         // Only get non-expired entries
         {
           $match: {

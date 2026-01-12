@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Press_Start_2P, VT323 } from "next/font/google";
 import "./globals.css";
 import "./retro.css";
+import { Analytics } from "@vercel/analytics/next"
 
 const pressStart = Press_Start_2P({
   weight: "400",
@@ -37,6 +38,7 @@ export default function RootLayout({
         className={`${pressStart.variable} ${vt323.variable} antialiased bg-[#0a0a0f] text-white min-h-screen overflow-x-hidden`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );

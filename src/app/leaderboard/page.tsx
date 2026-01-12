@@ -35,7 +35,7 @@ export default function LeaderboardPage() {
 
     try {
       const response = await fetch(`/api/leaderboard?sortBy=${sortBy}&limit=50`);
-      
+
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.error || "Failed to fetch leaderboard");
@@ -85,19 +85,22 @@ export default function LeaderboardPage() {
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto pt-12 md:pt-16">
+        {/* Navigation */}
+        <div className="absolute top-4 left-4 md:top-8 md:left-8 z-50">
+          <button
+            onClick={() => router.push("/")}
+            className="font-vt323 text-xl md:text-2xl text-cyan-400 hover:text-cyan-300 transition-colors font-bold flex items-center gap-2"
+          >
+            <span>←</span> BACK TO HOME
+          </button>
+        </div>
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12 md:mb-16"
+          className="text-center mb-12 md:mb-16 pt-8"
         >
-          <button
-            onClick={() => router.push("/")}
-            className="font-vt323 text-xl md:text-2xl text-cyan-400 hover:text-cyan-300 transition-colors mb-8 font-bold"
-          >
-            ← BACK TO HOME
-          </button>
-
           <NeonText color="cyan" className="font-press-start text-4xl md:text-6xl mb-6 font-bold">
             LEADERBOARD
           </NeonText>
@@ -115,31 +118,28 @@ export default function LeaderboardPage() {
         >
           <button
             onClick={() => setSortBy("powerLevel")}
-            className={`font-vt323 text-xl md:text-2xl px-6 py-3 rounded border-2 transition-all font-bold ${
-              sortBy === "powerLevel"
+            className={`font-vt323 text-xl md:text-2xl px-6 py-3 rounded border-2 transition-all font-bold ${sortBy === "powerLevel"
                 ? "bg-cyan-500/30 border-cyan-500 text-cyan-400"
                 : "bg-cyan-500/10 border-cyan-500/30 text-gray-400 hover:border-cyan-500/50"
-            }`}
+              }`}
           >
             ⚡ POWER LEVEL
           </button>
           <button
             onClick={() => setSortBy("stars")}
-            className={`font-vt323 text-xl md:text-2xl px-6 py-3 rounded border-2 transition-all font-bold ${
-              sortBy === "stars"
+            className={`font-vt323 text-xl md:text-2xl px-6 py-3 rounded border-2 transition-all font-bold ${sortBy === "stars"
                 ? "bg-yellow-500/30 border-yellow-500 text-yellow-400"
                 : "bg-yellow-500/10 border-yellow-500/30 text-gray-400 hover:border-yellow-500/50"
-            }`}
+              }`}
           >
             ⭐ STARS
           </button>
           <button
             onClick={() => setSortBy("followers")}
-            className={`font-vt323 text-xl md:text-2xl px-6 py-3 rounded border-2 transition-all font-bold ${
-              sortBy === "followers"
+            className={`font-vt323 text-xl md:text-2xl px-6 py-3 rounded border-2 transition-all font-bold ${sortBy === "followers"
                 ? "bg-pink-500/30 border-pink-500 text-pink-400"
                 : "bg-pink-500/10 border-pink-500/30 text-gray-400 hover:border-pink-500/50"
-            }`}
+              }`}
           >
             👥 FOLLOWERS
           </button>

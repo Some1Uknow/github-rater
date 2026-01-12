@@ -16,6 +16,7 @@ import { StatsGrid } from "@/components/StatsGrid";
 import { LanguageBar } from "@/components/LanguageBar";
 import { VerdictPanel } from "@/components/VerdictPanel";
 import { NeonText } from "@/components/NeonText";
+import { SectionActions } from "@/components/SectionActions";
 
 import { GitHubData, AnalysisResult } from "@/lib/types";
 
@@ -112,6 +113,72 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
     } catch (err) {
       console.error("Failed to generate image:", err);
     }
+  };
+
+  const handleSectionDownload = async (sectionId: string, sectionName: string) => {
+    const sectionElement = document.getElementById(sectionId);
+    if (!sectionElement) return;
+
+    try {
+      // Store original styles
+      const originalStyle = sectionElement.getAttribute("style") || "";
+
+      // Temporarily add styles for better image capture
+      sectionElement.style.padding = "24px";
+      sectionElement.style.backgroundColor = "#0a0a0f";
+      sectionElement.style.borderRadius = "12px";
+
+      // Wait for styles to apply
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      const dataUrl = await toPng(sectionElement, {
+        backgroundColor: "#0a0a0f",
+        pixelRatio: 2,
+        cacheBust: true,
+        style: {
+          transform: "none",
+        },
+      });
+
+      // Restore original styles
+      if (originalStyle) {
+        sectionElement.setAttribute("style", originalStyle);
+      } else {
+        sectionElement.removeAttribute("style");
+      }
+
+      // Create download link and trigger download
+      const link = document.createElement("a");
+      link.download = `${username}-${sectionName.toLowerCase().replace(/\s+/g, "-")}.png`;
+      link.href = dataUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      confetti({
+        particleCount: 30,
+        spread: 50,
+        origin: { y: 0.7 },
+      });
+    } catch (err) {
+      console.error("Failed to generate section image:", err);
+    }
+  };
+
+  const handleShareToX = (sectionName: string, sectionData?: string) => {
+    const baseText = `Check out my GitHub ${sectionName}! 🚀`;
+    const fullText = sectionData
+      ? `${baseText}\n${sectionData}\n\nAnalyze your profile at`
+      : `${baseText}\n\nAnalyze your profile at`;
+
+    const url = `${window.location.origin}/report/${username}`;
+    const tweetText = encodeURIComponent(`${fullText} ${url}`);
+
+    window.open(
+      `https://twitter.com/intent/tweet?text=${tweetText}`,
+      "_blank",
+      "width=550,height=420"
+    );
   };
 
   const handleNewAnalysis = () => {
@@ -291,6 +358,14 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
                     title="POWER BREAKDOWN"
                   />
                 </div>
+
+                <SectionActions
+                  sectionId="power"
+                  sectionName="Power Level"
+                  onDownload={handleSectionDownload}
+                  onShareToX={handleShareToX}
+                  shareData={`Power Level: ${analysis.powerLevel.overall} | Rank: ${analysis.powerLevel.rank} - ${analysis.powerLevel.title}`}
+                />
               </motion.div>
             </AnimatePresence>
           </section>
@@ -327,6 +402,14 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
                   <div className="font-vt323 text-green-400 text-sm md:text-lg font-bold">{analysis.personality.motto}</div>
                 </div>
               </div>
+
+              <SectionActions
+                sectionId="archetype"
+                sectionName="Archetype"
+                onDownload={handleSectionDownload}
+                onShareToX={handleShareToX}
+                shareData={`My GitHub Archetype: ${analysis.archetype.primary} | ${analysis.archetype.secondary}`}
+              />
             </motion.div>
           </section>
 
@@ -419,6 +502,14 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
               viewport={{ once: true }}
             >
               <BadgeShowcase badges={analysis.badges} />
+
+              <SectionActions
+                sectionId="badges"
+                sectionName="Badges"
+                onDownload={handleSectionDownload}
+                onShareToX={handleShareToX}
+                shareData={`Unlocked ${analysis.badges.length} GitHub achievements! 🏆`}
+              />
             </motion.div>
           </section>
 
@@ -430,6 +521,13 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
               viewport={{ once: true }}
             >
               <RoastPraisePanel data={analysis.ropiast} />
+
+              <SectionActions
+                sectionId="roast"
+                sectionName="Roast/Praise"
+                onDownload={handleSectionDownload}
+                onShareToX={handleShareToX}
+              />
             </motion.div>
           </section>
 

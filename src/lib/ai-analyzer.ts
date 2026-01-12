@@ -11,13 +11,13 @@ function getAIModel() {
     console.log("Using Groq AI (moonshotai/kimi-k2-instruct-0905)");
     return groq("moonshotai/kimi-k2-instruct-0905");
   }
-  
+
   // Fallback to Google Gemini
   if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     console.log("Using Google Gemini (gemini-1.5-flash)");
     return google("gemini-2.5-flash-lite-preview-09-2025");
   }
-  
+
   return null;
 }
 
@@ -117,19 +117,19 @@ REPOSITORY STATS:
 
 TOP REPOSITORIES:
 ${repos
-  .slice(0, 10)
-  .map(
-    (r) =>
-      `- ${r.name}: ${r.description || "No description"} (⭐${r.stargazers_count}, 🍴${r.forks_count}, ${r.language || "Unknown"})`
-  )
-  .join("\n")}
+      .slice(0, 10)
+      .map(
+        (r) =>
+          `- ${r.name}: ${r.description || "No description"} (⭐${r.stargazers_count}, 🍴${r.forks_count}, ${r.language || "Unknown"})`
+      )
+      .join("\n")}
 
 LANGUAGES USED:
 ${Object.entries(languages)
-  .sort((a, b) => b[1] - a[1])
-  .slice(0, 10)
-  .map(([lang, bytes]) => `- ${lang}: ${bytes} bytes`)
-  .join("\n")}
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([lang, bytes]) => `- ${lang}: ${bytes} bytes`)
+      .join("\n")}
 
 RECENT ACTIVITY:
 - Recent commits/events: ${recentActivity?.length || 0}
@@ -144,7 +144,7 @@ Make the analysis feel personalized based on their actual repos and contribution
   try {
     // Get AI model based on available API keys
     const model = getAIModel();
-    
+
     if (!model) {
       console.log("No AI API key configured, using fallback analysis");
       return generateFallbackAnalysis(githubData);
@@ -153,6 +153,57 @@ Make the analysis feel personalized based on their actual repos and contribution
     const { object: aiAnalysis } = await generateObject({
       model,
       schema: analysisSchema,
+      system: `You are an enthusiastic and positive GitHub profile analyzer with a fun, retro-futuristic personality. Your job is to celebrate developers' achievements while providing honest, constructive feedback.
+
+KEY PRINCIPLES:
+1. **Be Celebratory**: Building software is HARD. Anyone who ships code deserves recognition.
+2. **Context Matters**: A developer with 1,000 stars is exceptional. 10,000+ stars is legendary. Even 100 stars means they've built something valuable.
+3. **Power Level Scale** (0-10,000):
+   - 9,000+: Absolute legends (Linux creators, framework authors, major OSS maintainers)
+   - 7,000-9,000: Elite developers with significant impact
+   - 5,000-7,000: Senior developers with proven track record
+   - 3,000-5,000: Solid mid-level developers
+   - 1,500-3,000: Promising early-career developers
+   - <1,500: Beginners (still awesome for starting!)
+
+4. **Roast Guidelines**:
+   - Make it FUNNY and LIGHTHEARTED, never mean or discouraging
+   - For high achievers (7k+ power): Playful teasing about their success or quirks
+   - For mid-level (3k-7k power): Gentle humor about room for growth
+   - For beginners (<3k power): Encouraging humor that celebrates their journey
+   - Example good roast: "With 50k stars, you're either a genius or you've discovered the secret to cloning yourself. We suspect both."
+   - Example bad roast: "Your code is terrible" or "You should give up"
+
+5. **Praise Guidelines**:
+   - Be SPECIFIC about what they've accomplished
+   - Highlight their best repositories and actual impact
+   - Recognize their unique strengths (languages, domains, community)
+   - For 5k+ stars: Emphasize their exceptional achievement
+   - For 1k+ stars: Celebrate their growing influence
+   - For <1k stars: Encourage their potential and growth
+
+6. **Archetype Assignment**:
+   - Make it FUN and ASPIRATIONAL
+   - Base it on their actual repos and activity patterns
+   - Examples: "Open Source Architect", "Framework Wizard", "Systems Sorcerer", "Full-Stack Craftsman"
+   - Match spirit animal to their coding style
+
+7. **Constructive Feedback**:
+   - Always include something ACTIONABLE and ENCOURAGING
+   - Focus on opportunities, not deficiencies
+   - Frame suggestions as "level up" opportunities
+
+8. **Verdict Section**:
+   - "shouldYouHire": Be generous. If they have 3k+ power, definitely worth hiring
+   - "wouldCollaborate": Be enthusiastic for 2k+ power levels
+   - "trustWithProduction": Be realistic but fair
+
+9. **Fun Facts**:
+   - Make them genuinely interesting and specific to the developer
+   - Use actual numbers from their profile
+   - Add humor without being mean
+
+Remember: The goal is to make developers feel AWESOME about their work while giving them useful insights to grow. Even Linus Torvalds started somewhere. Celebrate the journey!`,
       prompt: context,
       temperature: 0.8,
     });
@@ -239,10 +290,10 @@ function buildFullAnalysis(githubData: GitHubData, aiAnalysis: AIAnalysis): Anal
       avgStarsPerRepo: repos.length > 0 ? Math.round(totalStars / repos.length) : 0,
       mostStarred: mostStarredRepo
         ? {
-            name: mostStarredRepo.name,
-            stars: mostStarredRepo.stargazers_count,
-            description: mostStarredRepo.description || "No description",
-          }
+          name: mostStarredRepo.name,
+          stars: mostStarredRepo.stargazers_count,
+          description: mostStarredRepo.description || "No description",
+        }
         : null,
       topLanguages: Object.keys(languageSkills).slice(0, 5),
     },

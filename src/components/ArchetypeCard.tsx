@@ -40,7 +40,7 @@ export function ArchetypeCard({ archetype, username, avatarUrl }: ArchetypeCardP
     >
       {/* Card container */}
       <div
-        className="relative p-6 rounded-xl border-2 border-purple-500/50 bg-gradient-to-br from-purple-900/30 via-black/50 to-pink-900/30 backdrop-blur-sm overflow-hidden"
+        className="relative p-4 md:p-6 rounded-xl border-2 border-purple-500/50 bg-gradient-to-br from-purple-900/30 via-black/50 to-pink-900/30 backdrop-blur-sm overflow-hidden"
         style={{
           boxShadow: "0 0 30px rgba(157, 0, 255, 0.3), inset 0 0 30px rgba(157, 0, 255, 0.1)",
         }}
@@ -75,7 +75,7 @@ export function ArchetypeCard({ archetype, username, avatarUrl }: ArchetypeCardP
               whileHover={{ scale: 1.05 }}
             >
               <div
-                className="w-24 h-24 rounded-full border-4 border-purple-500 overflow-hidden"
+                className="w-20 h-20 md:w-24 md:h-24 rounded-full border-4 border-purple-500 overflow-hidden"
                 style={{
                   boxShadow: "0 0 20px rgba(157, 0, 255, 0.5)",
                 }}
@@ -88,7 +88,7 @@ export function ArchetypeCard({ archetype, username, avatarUrl }: ArchetypeCardP
               </div>
               {/* Spirit animal badge */}
               <motion.div
-                className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-black border-2 border-pink-500 flex items-center justify-center text-xl"
+                className="absolute -bottom-2 -right-2 w-8 h-8 md:w-10 md:h-10 rounded-full bg-black border-2 border-pink-500 flex items-center justify-center text-lg md:text-xl"
                 animate={{ rotate: [0, 10, -10, 0] }}
                 transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
               >
@@ -99,7 +99,7 @@ export function ArchetypeCard({ archetype, username, avatarUrl }: ArchetypeCardP
 
           {/* Username */}
           <motion.h2
-            className="font-press-start text-lg text-center text-white mb-2"
+            className="font-press-start text-base md:text-lg text-center text-white mb-2 font-bold"
             style={{ textShadow: "0 0 10px rgba(255, 255, 255, 0.5)" }}
           >
             @{username}
@@ -112,9 +112,9 @@ export function ArchetypeCard({ archetype, username, avatarUrl }: ArchetypeCardP
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <div className="font-vt323 text-gray-400 text-sm mb-1">PRIMARY CLASS</div>
+            <div className="font-vt323 text-gray-400 text-xs md:text-sm mb-1 font-bold">PRIMARY CLASS</div>
             <div
-              className="font-press-start text-sm text-purple-400"
+              className="font-press-start text-xs md:text-sm text-purple-400 font-bold"
               style={{ textShadow: "0 0 10px rgba(157, 0, 255, 0.8)" }}
             >
               {archetype.primary}
@@ -128,8 +128,8 @@ export function ArchetypeCard({ archetype, username, avatarUrl }: ArchetypeCardP
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <div className="font-vt323 text-gray-400 text-sm mb-1">SECONDARY CLASS</div>
-            <div className="font-vt323 text-lg text-pink-400">
+            <div className="font-vt323 text-gray-400 text-xs md:text-sm mb-1 font-bold">SECONDARY CLASS</div>
+            <div className="font-vt323 text-base md:text-lg text-pink-400 font-bold">
               {archetype.secondary}
             </div>
           </motion.div>
@@ -142,18 +142,18 @@ export function ArchetypeCard({ archetype, username, avatarUrl }: ArchetypeCardP
             transition={{ delay: 0.5 }}
           >
             <div className="text-center p-2 rounded bg-black/30 border border-cyan-500/30">
-              <div className="font-vt323 text-gray-500 text-xs">SPIRIT ANIMAL</div>
-              <div className="font-vt323 text-cyan-400">{archetype.spiritAnimal}</div>
+              <div className="font-vt323 text-gray-500 text-xs font-bold">SPIRIT ANIMAL</div>
+              <div className="font-vt323 text-cyan-400 text-sm md:text-base font-bold">{archetype.spiritAnimal}</div>
             </div>
             <div className="text-center p-2 rounded bg-black/30 border border-pink-500/30">
-              <div className="font-vt323 text-gray-500 text-xs">ALIGNMENT</div>
-              <div className="font-vt323 text-pink-400">{archetype.alignment}</div>
+              <div className="font-vt323 text-gray-500 text-xs font-bold">ALIGNMENT</div>
+              <div className="font-vt323 text-pink-400 text-sm md:text-base font-bold">{archetype.alignment}</div>
             </div>
           </motion.div>
 
           {/* Description */}
           <motion.p
-            className="font-vt323 text-gray-300 text-center text-sm italic"
+            className="font-vt323 text-gray-300 text-center text-xs md:text-sm italic"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}

@@ -36,12 +36,12 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
         // Phase 1: Fetch GitHub data
         setPhase("fetching");
         const githubResponse = await fetch(`/api/github/${username}`);
-        
+
         if (!githubResponse.ok) {
           const errorData = await githubResponse.json();
           throw new Error(errorData.error || "Failed to fetch GitHub data");
         }
-        
+
         const data: GitHubData = await githubResponse.json();
         setGithubData(data);
 
@@ -148,8 +148,8 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
                   phase === "fetching"
                     ? "33%"
                     : phase === "analyzing"
-                    ? "66%"
-                    : "100%",
+                      ? "66%"
+                      : "100%",
               }}
               transition={{ duration: 0.5 }}
               style={{ boxShadow: "0 0 10px #00ffff" }}
@@ -220,7 +220,7 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <button
             onClick={handleNewAnalysis}
-            className="font-vt323 text-xl md:text-2xl text-cyan-400 hover:text-cyan-300 transition-colors font-bold"
+            className="font-vt323 text-lg md:text-2xl text-cyan-400 hover:text-cyan-300 transition-colors font-bold"
           >
             ← NEW SCAN
           </button>
@@ -233,9 +233,8 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
                   setActiveSection(index);
                   document.getElementById(section.id)?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className={`font-vt323 text-lg font-bold transition-colors ${
-                  activeSection === index ? "text-cyan-400" : "text-gray-500 hover:text-gray-300"
-                }`}
+                className={`font-vt323 text-lg font-bold transition-colors ${activeSection === index ? "text-cyan-400" : "text-gray-500 hover:text-gray-300"
+                  }`}
               >
                 {section.label}
               </button>
@@ -244,7 +243,7 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
 
           <button
             onClick={handleShare}
-            className="font-vt323 text-lg md:text-xl px-5 py-3 bg-pink-500/20 border-2 border-pink-500/50 text-pink-400 rounded hover:bg-pink-500/30 transition-colors font-bold"
+            className="font-vt323 text-base md:text-xl px-4 md:px-5 py-2 md:py-3 bg-pink-500/20 border-2 border-pink-500/50 text-pink-400 rounded hover:bg-pink-500/30 transition-colors font-bold"
           >
             📸 SHARE
           </button>
@@ -260,13 +259,13 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
             animate={{ opacity: 1, y: 0 }}
             className="text-center pt-12 md:pt-16"
           >
-            <NeonText color="cyan" className="font-press-start text-xl md:text-2xl mb-4 font-bold">
+            <NeonText color="cyan" className="font-press-start text-lg md:text-2xl mb-4 font-bold">
               ANALYSIS COMPLETE
             </NeonText>
-            <h1 className="font-press-start text-3xl md:text-5xl text-white mb-4 font-bold">
+            <h1 className="font-press-start text-2xl md:text-5xl text-white mb-4 font-bold">
               @{username}
             </h1>
-            <p className="font-vt323 text-xl md:text-2xl text-gray-500">
+            <p className="font-vt323 text-lg md:text-2xl text-gray-500">
               Analyzed on {new Date(analysis.meta.analyzedAt).toLocaleDateString()}
             </p>
           </motion.header>
@@ -310,22 +309,22 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
               />
 
               {/* Personality traits */}
-              <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div className="p-5 rounded border-2 border-purple-500/30 bg-purple-900/10 text-center">
-                  <div className="font-vt323 text-gray-500 text-base md:text-lg mb-2 font-bold">CODING STYLE</div>
-                  <div className="font-vt323 text-purple-400 text-lg md:text-xl font-bold">{analysis.personality.codingStyle}</div>
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <div className="p-4 md:p-5 rounded border-2 border-purple-500/30 bg-purple-900/10 text-center">
+                  <div className="font-vt323 text-gray-500 text-sm md:text-lg mb-2 font-bold">CODING STYLE</div>
+                  <div className="font-vt323 text-purple-400 text-base md:text-xl font-bold">{analysis.personality.codingStyle}</div>
                 </div>
-                <div className="p-5 rounded border-2 border-pink-500/30 bg-pink-900/10 text-center">
-                  <div className="font-vt323 text-gray-500 text-base md:text-lg mb-2 font-bold">WORK PATTERN</div>
-                  <div className="font-vt323 text-pink-400 text-lg md:text-xl font-bold">{analysis.personality.workPattern}</div>
+                <div className="p-4 md:p-5 rounded border-2 border-pink-500/30 bg-pink-900/10 text-center">
+                  <div className="font-vt323 text-gray-500 text-sm md:text-lg mb-2 font-bold">WORK PATTERN</div>
+                  <div className="font-vt323 text-pink-400 text-base md:text-xl font-bold">{analysis.personality.workPattern}</div>
                 </div>
-                <div className="p-5 rounded border-2 border-cyan-500/30 bg-cyan-900/10 text-center">
-                  <div className="font-vt323 text-gray-500 text-base md:text-lg mb-2 font-bold">TEAM ROLE</div>
-                  <div className="font-vt323 text-cyan-400 text-lg md:text-xl font-bold">{analysis.personality.teamRole}</div>
+                <div className="p-4 md:p-5 rounded border-2 border-cyan-500/30 bg-cyan-900/10 text-center">
+                  <div className="font-vt323 text-gray-500 text-sm md:text-lg mb-2 font-bold">TEAM ROLE</div>
+                  <div className="font-vt323 text-cyan-400 text-base md:text-xl font-bold">{analysis.personality.teamRole}</div>
                 </div>
-                <div className="p-5 rounded border-2 border-green-500/30 bg-green-900/10 text-center">
-                  <div className="font-vt323 text-gray-500 text-base md:text-lg mb-2 font-bold">MOTTO</div>
-                  <div className="font-vt323 text-green-400 text-base md:text-lg font-bold">{analysis.personality.motto}</div>
+                <div className="p-4 md:p-5 rounded border-2 border-green-500/30 bg-green-900/10 text-center">
+                  <div className="font-vt323 text-gray-500 text-sm md:text-lg mb-2 font-bold">MOTTO</div>
+                  <div className="font-vt323 text-green-400 text-sm md:text-lg font-bold">{analysis.personality.motto}</div>
                 </div>
               </div>
             </motion.div>
@@ -391,22 +390,22 @@ export default function ReportPage({ params }: { params: Promise<{ username: str
               )}
 
               {/* Activity stats */}
-              <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-                <div className="p-5 rounded border-2 border-cyan-500/30 bg-cyan-900/10 text-center">
-                  <div className="font-vt323 text-gray-500 text-base md:text-lg mb-2 font-bold">MOST ACTIVE DAY</div>
-                  <div className="font-vt323 text-cyan-400 text-lg md:text-xl font-bold">{analysis.activity.mostActiveDay}</div>
+              <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <div className="p-4 md:p-5 rounded border-2 border-cyan-500/30 bg-cyan-900/10 text-center">
+                  <div className="font-vt323 text-gray-500 text-sm md:text-lg mb-2 font-bold">MOST ACTIVE DAY</div>
+                  <div className="font-vt323 text-cyan-400 text-base md:text-xl font-bold">{analysis.activity.mostActiveDay}</div>
                 </div>
-                <div className="p-5 rounded border-2 border-purple-500/30 bg-purple-900/10 text-center">
-                  <div className="font-vt323 text-gray-500 text-base md:text-lg mb-2 font-bold">NIGHT OWL SCORE</div>
-                  <div className="font-vt323 text-purple-400 text-lg md:text-xl font-bold">{analysis.activity.nightOwlScore}%</div>
+                <div className="p-4 md:p-5 rounded border-2 border-purple-500/30 bg-purple-900/10 text-center">
+                  <div className="font-vt323 text-gray-500 text-sm md:text-lg mb-2 font-bold">NIGHT OWL SCORE</div>
+                  <div className="font-vt323 text-purple-400 text-base md:text-xl font-bold">{analysis.activity.nightOwlScore}%</div>
                 </div>
-                <div className="p-5 rounded border-2 border-pink-500/30 bg-pink-900/10 text-center">
-                  <div className="font-vt323 text-gray-500 text-base md:text-lg mb-2 font-bold">BURNOUT RISK</div>
-                  <div className="font-vt323 text-pink-400 text-lg md:text-xl font-bold">{analysis.activity.burnoutRisk}</div>
+                <div className="p-4 md:p-5 rounded border-2 border-pink-500/30 bg-pink-900/10 text-center">
+                  <div className="font-vt323 text-gray-500 text-sm md:text-lg mb-2 font-bold">BURNOUT RISK</div>
+                  <div className="font-vt323 text-pink-400 text-base md:text-xl font-bold">{analysis.activity.burnoutRisk}</div>
                 </div>
-                <div className="p-5 rounded border-2 border-green-500/30 bg-green-900/10 text-center">
-                  <div className="font-vt323 text-gray-500 text-base md:text-lg mb-2 font-bold">PATTERN</div>
-                  <div className="font-vt323 text-green-400 text-lg md:text-xl font-bold">{analysis.activity.pattern.type}</div>
+                <div className="p-4 md:p-5 rounded border-2 border-green-500/30 bg-green-900/10 text-center">
+                  <div className="font-vt323 text-gray-500 text-sm md:text-lg mb-2 font-bold">PATTERN</div>
+                  <div className="font-vt323 text-green-400 text-base md:text-xl font-bold">{analysis.activity.pattern.type}</div>
                 </div>
               </div>
             </motion.div>

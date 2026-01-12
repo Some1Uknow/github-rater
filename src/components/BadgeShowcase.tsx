@@ -21,14 +21,14 @@ export function BadgeShowcase({ badges }: BadgeShowcaseProps) {
 
   return (
     <div className="w-full">
-      <h3 className="font-vt323 text-xl text-pink-500 text-center mb-6 tracking-wider">
+      <h3 className="font-vt323 text-lg md:text-xl text-pink-500 text-center mb-6 tracking-wider font-bold">
         ACHIEVEMENTS UNLOCKED
       </h3>
-      
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {badges.map((badge, index) => {
           const colors = rarityColors[badge.rarity];
-          
+
           return (
             <motion.div
               key={badge.id}
@@ -36,7 +36,7 @@ export function BadgeShowcase({ badges }: BadgeShowcaseProps) {
               animate={{ opacity: 1, y: 0, rotateY: 0 }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               whileHover={{ scale: 1.05, y: -5 }}
-              className={`relative p-4 rounded-lg border-2 ${colors.border} ${colors.bg} bg-opacity-20 backdrop-blur-sm cursor-pointer group`}
+              className={`relative p-3 md:p-4 rounded-lg border-2 ${colors.border} ${colors.bg} bg-opacity-20 backdrop-blur-sm cursor-pointer group`}
               style={{
                 boxShadow: `0 0 15px ${colors.glow}40, inset 0 0 15px ${colors.glow}20`,
               }}
@@ -48,37 +48,36 @@ export function BadgeShowcase({ badges }: BadgeShowcaseProps) {
                 whileHover={{ x: "100%" }}
                 transition={{ duration: 0.6 }}
               />
-              
+
               {/* Badge content */}
               <div className="relative z-10 text-center">
                 <motion.div
-                  className="text-4xl mb-2"
-                  animate={{ 
+                  className="text-3xl md:text-4xl mb-2"
+                  animate={{
                     rotate: [0, -5, 5, -5, 0],
                     scale: [1, 1.1, 1],
                   }}
-                  transition={{ 
-                    duration: 2, 
-                    repeat: Infinity, 
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
                     repeatDelay: 3 + index,
                   }}
                 >
                   {badge.icon}
                 </motion.div>
-                
-                <div className="font-vt323 text-white text-sm mb-1 leading-tight">
+
+                <div className="font-vt323 text-white text-xs md:text-sm mb-1 leading-tight font-bold">
                   {badge.name}
                 </div>
-                
+
                 <div
-                  className={`font-press-start text-[8px] ${
-                    badge.rarity === "Mythic" ? "text-pink-400" :
+                  className={`font-press-start text-[8px] ${badge.rarity === "Mythic" ? "text-pink-400" :
                     badge.rarity === "Legendary" ? "text-orange-400" :
-                    badge.rarity === "Epic" ? "text-purple-400" :
-                    badge.rarity === "Rare" ? "text-blue-400" :
-                    badge.rarity === "Uncommon" ? "text-green-400" :
-                    "text-gray-400"
-                  }`}
+                      badge.rarity === "Epic" ? "text-purple-400" :
+                        badge.rarity === "Rare" ? "text-blue-400" :
+                          badge.rarity === "Uncommon" ? "text-green-400" :
+                            "text-gray-400"
+                    }`}
                 >
                   {badge.rarity.toUpperCase()}
                 </div>

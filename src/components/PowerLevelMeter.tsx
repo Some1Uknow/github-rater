@@ -54,9 +54,9 @@ export function PowerLevelMeter({ level, maxLevel = 10000, rank, title }: PowerL
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-4"
       >
-        <div className="font-vt323 text-2xl text-gray-400 mb-1">POWER LEVEL</div>
+        <div className="font-vt323 text-xl md:text-2xl text-gray-400 mb-1 font-bold">POWER LEVEL</div>
         <motion.div
-          className={`font-press-start text-4xl md:text-5xl ${colors.text}`}
+          className={`font-press-start text-3xl md:text-5xl ${colors.text} font-bold`}
           style={{
             textShadow: `0 0 10px ${colors.glow}, 0 0 20px ${colors.glow}, 0 0 40px ${colors.glow}`,
           }}
@@ -76,7 +76,7 @@ export function PowerLevelMeter({ level, maxLevel = 10000, rank, title }: PowerL
       {/* Power Bar Container */}
       <div className="relative">
         {/* Background bar */}
-        <div className="h-8 bg-gray-900 border-2 border-gray-700 rounded-sm overflow-hidden">
+        <div className="h-6 md:h-8 bg-gray-900 border-2 border-gray-700 rounded-sm overflow-hidden">
           {/* Animated fill */}
           <motion.div
             className={`h-full ${colors.bar} relative`}
@@ -112,9 +112,9 @@ export function PowerLevelMeter({ level, maxLevel = 10000, rank, title }: PowerL
         className="flex justify-between items-center mt-4"
       >
         <div className="flex items-center gap-2">
-          <span className="font-vt323 text-gray-500 text-lg">RANK:</span>
+          <span className="font-vt323 text-gray-500 text-base md:text-lg font-bold">RANK:</span>
           <motion.span
-            className={`font-press-start text-2xl ${colors.text}`}
+            className={`font-press-start text-lg md:text-2xl ${colors.text} font-bold`}
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 0.5, delay: 2 }}
           >
@@ -122,7 +122,7 @@ export function PowerLevelMeter({ level, maxLevel = 10000, rank, title }: PowerL
           </motion.span>
         </div>
         <div
-          className={`font-vt323 text-xl ${colors.text} tracking-wider`}
+          className={`font-vt323 text-base md:text-xl ${colors.text} tracking-wider font-bold`}
           style={{ textShadow: `0 0 5px ${colors.glow}` }}
         >
           {title}
@@ -137,7 +137,7 @@ export function PowerLevelMeter({ level, maxLevel = 10000, rank, title }: PowerL
           transition={{ delay: 2.5, type: "spring" }}
           className="text-center mt-4"
         >
-          <span className="font-press-start text-yellow-400 text-sm animate-pulse">
+          <span className="font-press-start text-yellow-400 text-xs md:text-sm animate-pulse font-bold">
             IT&apos;S OVER 9000!!!
           </span>
         </motion.div>

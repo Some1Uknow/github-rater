@@ -84,14 +84,14 @@ export function RetroTerminal() {
             <div className="w-3 h-3 rounded-full bg-yellow-500" />
             <div className="w-3 h-3 rounded-full bg-green-500" />
           </div>
-          <div className="flex-1 text-center font-vt323 text-gray-400 text-sm">
+          <div className="flex-1 text-center font-vt323 text-gray-400 text-xs md:text-sm font-bold">
             github-rater@terminal ~ /analyze
           </div>
         </div>
 
         {/* Terminal content */}
         <div
-          className="bg-[#0d1117] p-6 min-h-[400px] font-vt323 text-green-400 text-lg relative overflow-hidden"
+          className="bg-[#0d1117] p-4 md:p-6 min-h-[300px] md:min-h-[400px] font-vt323 text-green-400 text-base md:text-lg relative overflow-hidden"
           onClick={() => inputRef.current?.focus()}
         >
           {/* CRT effect overlay */}
@@ -177,10 +177,10 @@ export function RetroTerminal() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
-        className="text-center mt-6 font-vt323 text-gray-500"
+        className="text-center mt-6 font-vt323 text-gray-500 px-4"
       >
-        <p>Type a GitHub username and press ENTER to analyze</p>
-        <p className="text-sm mt-2 text-gray-600">
+        <p className="text-base md:text-lg">Type a GitHub username and press ENTER to analyze</p>
+        <p className="text-xs md:text-sm mt-2 text-gray-600">
           Try: torvalds, gaearon, sindresorhus, yyx990803
         </p>
       </motion.div>

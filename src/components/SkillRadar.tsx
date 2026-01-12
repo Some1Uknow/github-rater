@@ -10,11 +10,11 @@ interface SkillRadarProps {
 export function SkillRadar({ skills, title = "SKILL MATRIX" }: SkillRadarProps) {
   const entries = Object.entries(skills).slice(0, 6);
   const count = entries.length;
-  
+
   if (count === 0) return null;
 
-  const centerX = 150;
-  const centerY = 150;
+  const centerX = 170;
+  const centerY = 170;
   const maxRadius = 120;
   const levels = 5;
 
@@ -56,8 +56,8 @@ export function SkillRadar({ skills, title = "SKILL MATRIX" }: SkillRadarProps) 
       <h3 className="font-vt323 text-xl text-cyan-400 text-center mb-4 tracking-wider">
         {title}
       </h3>
-      
-      <svg viewBox="0 0 300 300" className="w-full">
+
+      <svg viewBox="0 0 340 340" className="w-full h-auto">
         {/* Grid polygons */}
         {gridLines.map((points, level) => (
           <polygon
@@ -123,10 +123,10 @@ export function SkillRadar({ skills, title = "SKILL MATRIX" }: SkillRadarProps) 
         {/* Labels */}
         {entries.map((entry, i) => {
           const angle = (Math.PI * 2 * i) / count - Math.PI / 2;
-          const labelRadius = maxRadius + 25;
+          const labelRadius = maxRadius + 35;
           const x = centerX + labelRadius * Math.cos(angle);
           const y = centerY + labelRadius * Math.sin(angle);
-          
+
           return (
             <motion.text
               key={i}
@@ -134,7 +134,7 @@ export function SkillRadar({ skills, title = "SKILL MATRIX" }: SkillRadarProps) 
               y={y}
               textAnchor="middle"
               dominantBaseline="middle"
-              className="font-vt323 text-sm fill-gray-300"
+              className="font-vt323 text-xs sm:text-sm fill-gray-300"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 + i * 0.1 }}

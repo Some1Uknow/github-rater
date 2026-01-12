@@ -1,27 +1,44 @@
-import { MongoClient, Db } from "mongodb";
+import { MongoClient, Db, MongoClientOptions } from "mongodb";
 
 const MONGODB_URI = process.env.MONGODB_URI || "";
 const DB_NAME = "github-rater";
 
-let cachedClient: MongoClient | null = null;
-let cachedDb: Db | null = null;
+if (!MONGODB_URI) {
+  throw new Error("Please define MONGODB_URI environment variable");
+}
+
+const options: MongoClientOptions = {
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 5000, // Fail fast if DB is unreachable
+  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+  connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
+};
+
+let client: MongoClient;
+let clientPromise: Promise<MongoClient>;
+
+declare global {
+  // eslint-disable-next-line no-var
+  var _mongoClientPromise: Promise<MongoClient> | undefined;
+}
+
+if (process.env.NODE_ENV === "development") {
+  // In development mode, use a global variable so that the value
+  // is preserved across module reloads caused by HMR (Hot Module Replacement).
+  if (!global._mongoClientPromise) {
+    client = new MongoClient(MONGODB_URI, options);
+    global._mongoClientPromise = client.connect();
+  }
+  clientPromise = global._mongoClientPromise;
+} else {
+  // In production mode, it's best to not use a global variable.
+  client = new MongoClient(MONGODB_URI, options);
+  clientPromise = client.connect();
+}
 
 export async function connectToDatabase(): Promise<{ client: MongoClient; db: Db }> {
-  if (!MONGODB_URI) {
-    throw new Error("Please define MONGODB_URI environment variable");
-  }
-
-  if (cachedClient && cachedDb) {
-    return { client: cachedClient, db: cachedDb };
-  }
-
-  const client = new MongoClient(MONGODB_URI);
-  await client.connect();
+  const client = await clientPromise;
   const db = client.db(DB_NAME);
-
-  cachedClient = client;
-  cachedDb = db;
-
   return { client, db };
 }
 
@@ -39,7 +56,7 @@ export async function getCachedAnalysis(username: string): Promise<CachedAnalysi
   try {
     const { db } = await connectToDatabase();
     const collection = db.collection<CachedAnalysis>("analyses");
-    
+
     const cached = await collection.findOne({
       username: username.toLowerCase(),
       expiresAt: { $gt: new Date() },
